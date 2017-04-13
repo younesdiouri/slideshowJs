@@ -29,3 +29,6 @@ function changeFirstImg() {
     $('#rail').css('margin-left', '0px');
     $('#rail img:last').after($('#rail img:first'))
 }
+$.get("https://www.skrzypczyk.fr/slideshow.php", function( data ) {
+    $( ".result" ).html( data );
+});
