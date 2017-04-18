@@ -1,34 +1,98 @@
-//var objet = jQuery();
-//var objetJquery = $("selecteur css").action();
-// Selecteurs css possibles
-// #pour ID
-// . pour class
-// * pour tout
-// $("button:first").click( function () {
-//     $('p').hide();
-// });
-// $("button").eq(1).click( function () {
-//   $("p").show();
-// });
-// $("button:last").click( function () {
-//     $("p").toggle();
-// });
-// next.click next image
+var url = "https://www.skrzypczyk.fr/slideshow.php";
+var speed = 4000;
+var play_pause_button = $('#play-pause');
+var next_button = $("#next");
+var previous_button = $("#previous");
+var container = $('#rail');
+var play = false;
 
-// fonction nextImage : animate(margin-left : -300px , 2000(time), changeFirstImgcakkback)
-//function changeirstimg^rail.css(margin-left,0px)
-//je selectione ma derniere image et apres la dernière image je viens y mettre la première.
-// COMPLEXITE SUPPLEMENTAIRE : SI ON DESACTIVE LE JS DANS LE NAVIGATEUR, METTRE UN MESSAGE "il n'y a pas de js dans le nav"
-$("#next").click(nextImage);
+$.get(url, {}, function (data) {
+
+    var images = JSON.parse(data);
+
+    for (var i = 0 ; i < images.length ; i ++) {
+
+        container.append('<img src="'+ images[i]['url'] +'" alt="'+ images[i]['title'] +'" width="300px">')
+    }
+
+});
+
+// Next
+
+next_button.click(nextImage);
 
 function nextImage() {
-    $('#rail').animate({"margin-left":"-300px"}, 2000, changeFirstImg)
+    container.animate({"margin-left":"-300px"}, 2000, changeFirstImg)
 }
 
 function changeFirstImg() {
-    $('#rail').css('margin-left', '0px');
+    container.css('margin-left', '0px');
     $('#rail img:last').after($('#rail img:first'))
 }
-$.get("https://www.skrzypczyk.fr/slideshow.php", function( data ) {
-    $( ".result" ).html( data );
+
+// Previous
+
+previous_button.click(previousImage);
+
+function previousImage() {
+    container.animate({"margin-left":"300px"}, 2000, changeLastImg)
+}
+
+function changeLastImg() {
+    $('#rail img:first').before($('#rail img:last'));
+    container.css('margin-left', '0px');
+
+}
+
+// Play and pause caroussel
+
+if (play) {
+
+    var auto = setInterval(function(){ nextImage() }, speed);
+    play_pause_button.html('<i class="fa fa-pause" aria-hidden="true"></i> Pause');
+
+}
+
+else {
+
+    var auto = null;
+    play_pause_button.html('<i class="fa fa-play" aria-hidden="true"></i> Play');
+}
+
+
+$(play_pause_button).click(function () {
+
+    if (play) {
+
+        clearInterval(auto);
+        play = false;
+        $(this).html('<i class="fa fa-play" aria-hidden="true"></i> Play');
+    }
+
+    else {
+
+        auto = setInterval(function(){ nextImage() }, speed);
+        play = true;
+        $(this).html('<i class="fa fa-pause" aria-hidden="true"></i> Pause');
+    }
+
 });
+
+
+// Hover
+
+$(document).on('mouseover' , 'img' , function(){
+    clearInterval(auto);
+    play = false;
+    play_pause_button.html('<i class="fa fa-play" aria-hidden="true"></i> Play');
+});
+
+$(document).on('mouseout' , 'img' , function(){
+    auto = setInterval(function(){ nextImage() }, speed);
+    play = true;
+});
+
+
+
+
+
