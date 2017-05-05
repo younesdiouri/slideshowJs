@@ -4,6 +4,8 @@ var play_pause_button = $('#play-pause');
 var next_button = $("#next");
 var previous_button = $("#previous");
 var container = $('#rail');
+var title_container = $("h1");
+var description_container = $("#description");
 var play = false;
 
 $.get(url, {}, function (data) {
@@ -12,7 +14,9 @@ $.get(url, {}, function (data) {
 
     for (var i = 0 ; i < images.length ; i ++) {
 
-        container.append('<img src="'+ images[i]['url'] +'" alt="'+ images[i]['title'] +'" width="300px">')
+        container.append('<img src="'+ images[i]['url'] +'" alt="'+ images[i]['title'] +'" width="300px">');
+        title_container.append(images[i]["title"]);
+        description_container.append(images[i]["desc"]);
     }
 
 });
