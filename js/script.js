@@ -5,6 +5,9 @@ var next_button = $("#next");
 var previous_button = $("#previous");
 var container = $('#rail');
 var play = false;
+var title = [];
+var desc = [];
+var current = 0;
 
 $.get(url, {}, function (data) {
 
@@ -13,7 +16,13 @@ $.get(url, {}, function (data) {
     for (var i = 0 ; i < images.length ; i ++) {
 
         container.append('<img src="'+ images[i]['url'] +'" alt="'+ images[i]['title'] +'" width="300px">')
+
+        title[i] = images[i]['title'];
+        desc[i] = images[i]['desc'];
     }
+
+    $('#slideshow h2').text(title[current]);
+    $('#slideshow p').text(desc[current]);
 
 });
 
@@ -22,7 +31,11 @@ $.get(url, {}, function (data) {
 next_button.click(nextImage);
 
 function nextImage() {
-    container.animate({"margin-left":"-300px"}, 2000, changeFirstImg)
+    container.animate({"margin-left":"-300px"}, 2000, changeFirstImg);
+    current ++;
+    if (current == 3) current = 0;
+    $('#slideshow h2').text(title[current]);
+    $('#slideshow p').text(desc[current]);
 }
 
 function changeFirstImg() {
@@ -35,7 +48,11 @@ function changeFirstImg() {
 previous_button.click(previousImage);
 
 function previousImage() {
-    container.animate({"margin-left":"300px"}, 2000, changeLastImg)
+    container.animate({"margin-left":"300px"}, 2000, changeLastImg);
+    current --;
+    if (current == -1) current = 2;
+    $('#slideshow h2').text(title[current]);
+    $('#slideshow p').text(desc[current]);
 }
 
 function changeLastImg() {
