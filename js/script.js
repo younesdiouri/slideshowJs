@@ -26,21 +26,45 @@ $.get(url, {}, function (data) {
 
 });
 
+function disable_buttons (status) {
+
+    if (status) {
+
+        play_pause_button.addClass('disabled');
+        next_button.addClass('disabled');
+        previous_button.addClass('disabled');
+    }
+
+    else {
+
+        play_pause_button.removeClass('disabled');
+        next_button.removeClass('disabled');
+        previous_button.removeClass('disabled');
+    }
+
+}
+
 // Next
 
 next_button.click(nextImage);
 
 function nextImage() {
-    container.animate({"margin-left":"-300px"}, 2000, changeFirstImg);
-    current ++;
-    if (current == 3) current = 0;
-    $('#slideshow h2').text(title[current]);
-    $('#slideshow p').text(desc[current]);
+
+    if (!next_button.hasClass('disabled')) {
+
+        disable_buttons(true);
+        container.animate({"margin-left":"-300px"}, speed, changeFirstImg);
+        current ++;
+        if (current == 3) current = 0;
+        $('#slideshow h2').text(title[current]);
+        $('#slideshow p').text(desc[current]);
+    }
 }
 
 function changeFirstImg() {
     container.css('margin-left', '0px');
-    $('#rail img:last').after($('#rail img:first'))
+    $('#rail img:last').after($('#rail img:first'));
+    disable_buttons(false);
 }
 
 // Previous
@@ -48,17 +72,22 @@ function changeFirstImg() {
 previous_button.click(previousImage);
 
 function previousImage() {
-    container.animate({"margin-left":"300px"}, 2000, changeLastImg);
-    current --;
-    if (current == -1) current = 2;
-    $('#slideshow h2').text(title[current]);
-    $('#slideshow p').text(desc[current]);
+
+    if (!previous_button.hasClass('disabled')) {
+
+        disable_buttons(true);
+        container.animate({"margin-left": "300px"}, speed, changeLastImg);
+        current--;
+        if (current == -1) current = 2;
+        $('#slideshow h2').text(title[current]);
+        $('#slideshow p').text(desc[current]);
+    }
 }
 
 function changeLastImg() {
     $('#rail img:first').before($('#rail img:last'));
     container.css('margin-left', '0px');
-
+    disable_buttons(false);
 }
 
 // Play and pause caroussel
@@ -77,20 +106,26 @@ else {
 }
 
 
-$(play_pause_button).click(function () {
+play_pause_button.click(function () {
 
-    if (play) {
+    if (!play_pause_button.hasClass('disabled')) {
 
-        clearInterval(auto);
-        play = false;
-        $(this).html('<i class="fa fa-play" aria-hidden="true"></i> Play');
-    }
 
-    else {
+        if (play) {
 
-        auto = setInterval(function(){ nextImage() }, speed);
-        play = true;
-        $(this).html('<i class="fa fa-pause" aria-hidden="true"></i> Pause');
+            clearInterval(auto);
+            play = false;
+            $(this).html('<i class="fa fa-play" aria-hidden="true"></i> Play');
+        }
+
+        else {
+
+            auto = setInterval(function () {
+                nextImage()
+            }, speed);
+            play = true;
+            $(this).html('<i class="fa fa-pause" aria-hidden="true"></i> Pause');
+        }
     }
 
 });

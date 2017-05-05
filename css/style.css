@@ -42,3 +42,14 @@ body {
     cursor: pointer;
     outline: none;
 }
+
+.btn.disabled {
+
+    background-color: #fff;
+    border-color: #ccc;
+    cursor: not-allowed;
+    filter: alpha(opacity=65);
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    opacity: .65;
+}
