@@ -76,7 +76,8 @@ function previousImage() {
     if (!previous_button.hasClass('disabled')) {
 
         disable_buttons(true);
-        container.animate({"margin-left": "300px"}, speed, changeLastImg);
+        changeLastImg();
+        container.animate({"margin-left": "0"},{ duration : speed ,complete: function() { disable_buttons(false); }});
         current--;
         if (current == -1) current = 2;
         $('#slideshow h2').text(title[current]);
@@ -85,9 +86,8 @@ function previousImage() {
 }
 
 function changeLastImg() {
-    $('#rail img:first').before($('#rail img:last'));
-    container.css('margin-left', '0px');
-    disable_buttons(false);
+    $('#rail img:last').insertBefore($('#rail img:first'));
+    container.css('margin-left', '-300px');
 }
 
 // Play and pause caroussel
