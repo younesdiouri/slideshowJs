@@ -15,7 +15,7 @@ $.get(url, {}, function (data) {
 
     for (var i = 0 ; i < images.length ; i ++) {
 
-        container.append('<img src="'+ images[i]['url'] +'" alt="'+ images[i]['title'] +'" width="300px">')
+        container.append('<div class = "imageImport" style=\'background-image: url(\"'+ images[i]['url'] +'\");\' title="'+ images[i]['title'] +'">');
 
         title[i] = images[i]['title'];
         desc[i] = images[i]['desc'];
@@ -63,7 +63,7 @@ function nextImage() {
 
 function changeFirstImg() {
     container.css('margin-left', '0px');
-    $('#rail img:last').after($('#rail img:first'));
+    $('#rail div:last').after($('#rail div:first'));
     disable_buttons(false);
 }
 
@@ -86,7 +86,7 @@ function previousImage() {
 }
 
 function changeLastImg() {
-    $('#rail img:last').insertBefore($('#rail img:first'));
+    $('#rail div:last').insertBefore($('#rail div:first'));
     container.css('margin-left', '-300px');
 }
 
@@ -133,13 +133,13 @@ play_pause_button.click(function () {
 
 // Hover
 
-$(document).on('mouseover' , 'img' , function(){
+$(document).on('mouseover' , '.imageImport' , function(){
     clearInterval(auto);
     play = false;
     play_pause_button.html('<i class="fa fa-play" aria-hidden="true"></i> Play');
 });
 
-$(document).on('mouseout' , 'img' , function(){
+$(document).on('mouseout' , '.imageImport' , function(){
     auto = setInterval(function(){ nextImage() }, speed);
     play = true;
 });
