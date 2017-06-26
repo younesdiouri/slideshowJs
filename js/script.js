@@ -110,7 +110,6 @@ play_pause_button.click(function () {
 
     if (!play_pause_button.hasClass('disabled')) {
 
-
         if (play) {
 
             clearInterval(auto);
@@ -120,9 +119,7 @@ play_pause_button.click(function () {
 
         else {
 
-            auto = setInterval(function () {
-                nextImage()
-            }, speed);
+            auto = setInterval(function () {nextImage()}, speed);
             play = true;
             $(this).html('<i class="fa fa-pause" aria-hidden="true"></i> Pause');
         }
