@@ -7,7 +7,7 @@ var container = $('#rail');
 var play = false;
 var title = [];
 var desc = [];
-var widthCarrousel;
+
 var current = 0;
 
 function getImages() {
@@ -19,7 +19,7 @@ function getImages() {
         for (var i = 0 ; i < images.length ; i ++) {
 
             container.append('<div class = "imageImport" data-id = "'+ i +'" style=\'background-image: url(\"'+ images[i]['url'] +'\");\' title="'+ images[i]['title'] +'">');
-            $(".pastillesList").append('<li class = "patilles"  id = "pastille'+ i +'" ></li>');
+            $(".pastillesList").append('<li class = "pastilles"  id = "'+ i +'" ></li>');
             title[i] = images[i]['title'];
             desc[i] = images[i]['desc'];
         }
@@ -67,9 +67,22 @@ function nextImage() {
 }
 
 function changeFirstImg() {
+    var listPastilles = [];
+    var imageImportId = $('#rail .imageImport:first').attr('data-id');
+    $('.pastilles').each(function() {
+        listPastilles.push($(this).attr('id'));
+    });
     container.css('margin-left', '0px');
-    $('#rail div:last').after($('#rail div:first'));
+    $('#rail div.imageImport:last').after($('#rail div.imageImport:first'));
     disable_buttons(false);
+    // alert(imageImportId);
+    for (var j = 0; j<listPastilles.length; j++) {
+
+        if (imageImportId == listPastilles[j]) {
+            console.log(listPastilles.length);
+            $('.pastilles[id="'+listPastilles[j]+'"]').toggleClass("isActive");
+        }
+    }
 }
 
 // Previous
