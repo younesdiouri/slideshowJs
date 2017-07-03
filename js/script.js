@@ -8,15 +8,16 @@ var play = false;
 var title = [];
 var desc = [];
 var first = 1;
+var url = "https://www.skrzypczyk.fr/slideshow.php";
+var order;
+var images;
 
 var current = 0;
 
 
 function getImages() {
-    var url = "https://www.skrzypczyk.fr/slideshow.php";
     $.get(url, {}, function (data) {
-
-        var images = JSON.parse(data);
+        images = JSON.parse(data);
 
         for (var i = 0 ; i < images.length ; i ++) {
 
@@ -63,30 +64,32 @@ function nextImage() {
         disable_buttons(true);
         container.animate({"margin-left":"-900px"}, speed, changeFirstImg);
         current ++;
-        if (current == 3) current = 0;
+        if (current == images.length) current = 0;
         $('#slideshow h2').text(title[current]);
         $('#slideshow p').text(desc[current]);
     }
 }
+/* getting parameters  */
 function moveNext(nb){
     disable_buttons(true);
-    container.animate({"margin-left":"-900px"}, speed/nb, changeFirstImg);
+    container.animate({"margin-left":"-900px"}, speed/(nb*2), changeFirstImg);
     current ++;
-    if (current == 3) current = 0;
+    if (current == images.length) current = 0;
     $('#slideshow h2').text(title[current]);
     $('#slideshow p').text(desc[current]);
 }
+/* getting parameters  */
 function goBack(nb){
         disable_buttons(true);
         changeLastImg();
-        container.animate({"margin-left": "0px"},{ duration : speed/nb ,complete: function() { disable_buttons(false); }});
+        container.animate({"margin-left": "0px"},{ duration : speed/(nb*2) ,complete: function() { disable_buttons(false); }});
         current--;
-        if (current == -1) current = 2;
+        if (current == -1) current = (images.length-1);
         $('#slideshow h2').text(title[current]);
         $('#slideshow p').text(desc[current]);
 }
 function changeFirstImg() {
-
+    order = 1;
    setPastilles();
     container.css('margin-left', '0px');
     $('#rail div.imageImport:last').after($('#rail div.imageImport:first'));
@@ -106,20 +109,40 @@ function setPastilles(){
             // console.log(j);
             if(first== 1)
             {
+                $('.pastilles[id="'+listPastilles[j]+'"]').toggleClass("isActive");
                 $('.pastilles[id="'+listPastilles[j+1]+'"]').toggleClass("isActive");
                 first = false;
 
             }
             else
             {
-                if(j==(listPastilles.length-1))
+                if(order == 1)
                 {
-                    $('.pastilles[id="'+listPastilles[0]+'"]').toggleClass("isActive");
+                    if(j==(listPastilles.length-1))
+                    {
+                        $('.pastilles[id="'+listPastilles[j]+'"]').toggleClass("isActive");
+                        $('.pastilles[id="'+listPastilles[0]+'"]').toggleClass("isActive");
+                    }
+                    else
+                    {
+                        $('.pastilles[id="'+listPastilles[j]+'"]').toggleClass("isActive");
+                        $('.pastilles[id="'+listPastilles[j+1]+'"]').toggleClass("isActive");
+                    }
                 }
-                else
+                else if(order == 0)
                 {
-                    $('.pastilles[id="'+listPastilles[j+1]+'"]').toggleClass("isActive");
+                    if(j==0)
+                    {
+                        $('.pastilles[id="'+listPastilles[j]+'"]').toggleClass("isActive");
+                        $('.pastilles[id="'+listPastilles[listPastilles.length-1]+'"]').toggleClass("isActive");
+                    }
+                    else
+                    {
+                        $('.pastilles[id="'+listPastilles[j]+'"]').toggleClass("isActive");
+                        $('.pastilles[id="'+listPastilles[j-1]+'"]').toggleClass("isActive");
+                    }
                 }
+
             }
 
         }
@@ -170,13 +193,14 @@ function previousImage() {
         changeLastImg();
         container.animate({"margin-left": "0px"},{ duration : speed ,complete: function() { disable_buttons(false); }});
         current--;
-        if (current == -1) current = 2;
+        if (current == -1) current = (images.length-1);
         $('#slideshow h2').text(title[current]);
         $('#slideshow p').text(desc[current]);
     }
 }
 
 function changeLastImg() {
+    order = 0;
     setPastilles();
     $('#rail').css('margin-left', '-900px');
     $('#rail div.imageImport:last-child').insertBefore($('#rail div.imageImport:first-child'));
