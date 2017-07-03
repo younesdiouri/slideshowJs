@@ -1,4 +1,4 @@
-var url = "https://www.skrzypczyk.fr/slideshow.php";
+
 var speed = 4000;
 var play_pause_button = $('#play-pause');
 var next_button = $("#next");
@@ -7,24 +7,29 @@ var container = $('#rail');
 var play = false;
 var title = [];
 var desc = [];
+var widthCarrousel;
 var current = 0;
 
-$.get(url, {}, function (data) {
+function getImages() {
+    var url = "https://www.skrzypczyk.fr/slideshow.php";
+    $.get(url, {}, function (data) {
 
-    var images = JSON.parse(data);
+        var images = JSON.parse(data);
 
-    for (var i = 0 ; i < images.length ; i ++) {
+        for (var i = 0 ; i < images.length ; i ++) {
 
-        container.append('<div class = "imageImport" style=\'background-image: url(\"'+ images[i]['url'] +'\");\' title="'+ images[i]['title'] +'">');
+            container.append('<div class = "imageImport" style=\'background-image: url(\"'+ images[i]['url'] +'\");\' title="'+ images[i]['title'] +'">');
 
-        title[i] = images[i]['title'];
-        desc[i] = images[i]['desc'];
-    }
+            title[i] = images[i]['title'];
+            desc[i] = images[i]['desc'];
+        }
 
-    $('#slideshow h2').text(title[current]);
-    $('#slideshow p').text(desc[current]);
+        $('#slideshow h2').text(title[current]);
+        $('#slideshow p').text(desc[current]);
 
-});
+    });
+}
+
 
 function disable_buttons (status) {
 
@@ -53,7 +58,7 @@ function nextImage() {
     if (!next_button.hasClass('disabled')) {
 
         disable_buttons(true);
-        container.animate({"margin-left":"-300px"}, speed, changeFirstImg);
+        container.animate({"margin-left":"-900px"}, speed, changeFirstImg);
         current ++;
         if (current == 3) current = 0;
         $('#slideshow h2').text(title[current]);
@@ -77,7 +82,7 @@ function previousImage() {
 
         disable_buttons(true);
         changeLastImg();
-        container.animate({"margin-left": "0"},{ duration : speed ,complete: function() { disable_buttons(false); }});
+        container.animate({"margin-left": "0px"},{ duration : speed ,complete: function() { console.log("test");disable_buttons(false); }});
         current--;
         if (current == -1) current = 2;
         $('#slideshow h2').text(title[current]);
@@ -86,8 +91,9 @@ function previousImage() {
 }
 
 function changeLastImg() {
-    $('#rail div:last').insertBefore($('#rail div:first'));
-    container.css('margin-left', '-300px');
+    $('#rail').css('margin-left', '-900px');
+    $('#rail div.imageImport:last-child').insertBefore($('#rail div.imageImport:first-child'));
+
 }
 
 // Play and pause caroussel
@@ -143,7 +149,6 @@ $(document).on('mouseout' , '.imageImport' , function(){
     auto = setInterval(function(){ nextImage() }, speed);
     play = true;
 });
-
 
 
 
