@@ -68,7 +68,23 @@ function nextImage() {
         $('#slideshow p').text(desc[current]);
     }
 }
-
+function moveNext(nb){
+    disable_buttons(true);
+    container.animate({"margin-left":"-900px"}, speed/nb, changeFirstImg);
+    current ++;
+    if (current == 3) current = 0;
+    $('#slideshow h2').text(title[current]);
+    $('#slideshow p').text(desc[current]);
+}
+function goBack(nb){
+        disable_buttons(true);
+        changeLastImg();
+        container.animate({"margin-left": "0px"},{ duration : speed/nb ,complete: function() { disable_buttons(false); }});
+        current--;
+        if (current == -1) current = 2;
+        $('#slideshow h2').text(title[current]);
+        $('#slideshow p').text(desc[current]);
+}
 function changeFirstImg() {
 
    setPastilles();
@@ -113,15 +129,29 @@ function setPastilles(){
 
 function goToImage(destination)
 {
-    var source = $('#rail .imageImport:first').attr('data-id');
+    var source = $('.imageImport:first').attr('data-id');
     // console.log("Destination : " + destination + "Source : " + source);
     if(destination - source > 0)
     {
         var count = destination - source;
+        var storeCountForSpeed = count;
         while(count>0)
         {
-            nextImage();
+            moveNext(storeCountForSpeed);
+            // console.log("NEXT !");
             count--;
+
+        }
+    }
+    else if(destination - source < 0)
+    {
+        var count = destination - source;
+        var storeCountForSpeed = count;
+        while(count<0)
+        {
+            goBack(storeCountForSpeed);
+            // console.log("NEXT !");
+            count++;
 
         }
     }
@@ -147,6 +177,7 @@ function previousImage() {
 }
 
 function changeLastImg() {
+    setPastilles();
     $('#rail').css('margin-left', '-900px');
     $('#rail div.imageImport:last-child').insertBefore($('#rail div.imageImport:first-child'));
 
