@@ -7,28 +7,32 @@ var container = $('#rail');
 var play = false;
 var title = [];
 var desc = [];
+var first = 1;
+var url = "https://www.skrzypczyk.fr/slideshow.php";
+var order;
+var images;
 
 var current = 0;
 
-function getImages() {
-    var url = "https://www.skrzypczyk.fr/slideshow.php";
-    $.get(url, {}, function (data) {
 
-        var images = JSON.parse(data);
+function getImages() {
+    $.get(url, {}, function (data) {
+        images = JSON.parse(data);
 
         for (var i = 0 ; i < images.length ; i ++) {
 
             container.append('<div class = "imageImport" data-id = "'+ i +'" style=\'background-image: url(\"'+ images[i]['url'] +'\");\' title="'+ images[i]['title'] +'">');
-            $(".pastillesList").append('<li class = "pastilles"  id = "'+ i +'" ></li>');
+            $(".pastillesList").append('<li class = "pastilles" id = "'+ i +'" onclick = "goToImage('+i+')" ></li>');
             title[i] = images[i]['title'];
             desc[i] = images[i]['desc'];
         }
-
+        $('.pastilles:first-child').toggleClass("isActive");
         $('#slideshow h2').text(title[current]);
         $('#slideshow p').text(desc[current]);
 
     });
 }
+
 
 
 function disable_buttons (status) {
@@ -60,31 +64,123 @@ function nextImage() {
         disable_buttons(true);
         container.animate({"margin-left":"-900px"}, speed, changeFirstImg);
         current ++;
-        if (current == 3) current = 0;
+        if (current == images.length) current = 0;
         $('#slideshow h2').text(title[current]);
         $('#slideshow p').text(desc[current]);
     }
 }
-
+/* getting parameters  */
+function moveNext(nb){
+    disable_buttons(true);
+    container.animate({"margin-left":"-900px"}, speed/(nb*2), changeFirstImg);
+    current ++;
+    if (current == images.length) current = 0;
+    $('#slideshow h2').text(title[current]);
+    $('#slideshow p').text(desc[current]);
+}
+/* getting parameters  */
+function goBack(nb){
+        disable_buttons(true);
+        changeLastImg();
+        container.animate({"margin-left": "0px"},{ duration : speed/(nb*2) ,complete: function() { disable_buttons(false); }});
+        current--;
+        if (current == -1) current = (images.length-1);
+        $('#slideshow h2').text(title[current]);
+        $('#slideshow p').text(desc[current]);
+}
 function changeFirstImg() {
+    order = 1;
+   setPastilles();
+    container.css('margin-left', '0px');
+    $('#rail div.imageImport:last').after($('#rail div.imageImport:first'));
+    disable_buttons(false);
+    // alert(imageImportId);
+
+}
+function setPastilles(){
     var listPastilles = [];
     var imageImportId = $('#rail .imageImport:first').attr('data-id');
     $('.pastilles').each(function() {
         listPastilles.push($(this).attr('id'));
     });
-    container.css('margin-left', '0px');
-    $('#rail div.imageImport:last').after($('#rail div.imageImport:first'));
-    disable_buttons(false);
-    // alert(imageImportId);
     for (var j = 0; j<listPastilles.length; j++) {
 
         if (imageImportId == listPastilles[j]) {
-            console.log(listPastilles.length);
-            $('.pastilles[id="'+listPastilles[j]+'"]').toggleClass("isActive");
+            // console.log(j);
+            if(first== 1)
+            {
+                $('.pastilles[id="'+listPastilles[j]+'"]').toggleClass("isActive");
+                $('.pastilles[id="'+listPastilles[j+1]+'"]').toggleClass("isActive");
+                first = false;
+
+            }
+            else
+            {
+                if(order == 1)
+                {
+                    if(j==(listPastilles.length-1))
+                    {
+                        $('.pastilles[id="'+listPastilles[j]+'"]').toggleClass("isActive");
+                        $('.pastilles[id="'+listPastilles[0]+'"]').toggleClass("isActive");
+                    }
+                    else
+                    {
+                        $('.pastilles[id="'+listPastilles[j]+'"]').toggleClass("isActive");
+                        $('.pastilles[id="'+listPastilles[j+1]+'"]').toggleClass("isActive");
+                    }
+                }
+                else if(order == 0)
+                {
+                    if(j==0)
+                    {
+                        $('.pastilles[id="'+listPastilles[j]+'"]').toggleClass("isActive");
+                        $('.pastilles[id="'+listPastilles[listPastilles.length-1]+'"]').toggleClass("isActive");
+                    }
+                    else
+                    {
+                        $('.pastilles[id="'+listPastilles[j]+'"]').toggleClass("isActive");
+                        $('.pastilles[id="'+listPastilles[j-1]+'"]').toggleClass("isActive");
+                    }
+                }
+
+            }
+
         }
     }
+
 }
 
+function goToImage(destination)
+{
+    var source = $('.imageImport:first').attr('data-id');
+    // console.log("Destination : " + destination + "Source : " + source);
+    if(destination - source > 0)
+    {
+        var count = destination - source;
+        var storeCountForSpeed = count;
+        while(count>0)
+        {
+            moveNext(storeCountForSpeed);
+            // console.log("NEXT !");
+            count--;
+
+        }
+    }
+    else if(destination - source < 0)
+    {
+        var count = destination - source;
+        var storeCountForSpeed = count;
+        while(count<0)
+        {
+            goBack(storeCountForSpeed);
+            // console.log("NEXT !");
+            count++;
+
+        }
+    }
+
+
+}
 // Previous
 
 previous_button.click(previousImage);
@@ -97,13 +193,15 @@ function previousImage() {
         changeLastImg();
         container.animate({"margin-left": "0px"},{ duration : speed ,complete: function() { disable_buttons(false); }});
         current--;
-        if (current == -1) current = 2;
+        if (current == -1) current = (images.length-1);
         $('#slideshow h2').text(title[current]);
         $('#slideshow p').text(desc[current]);
     }
 }
 
 function changeLastImg() {
+    order = 0;
+    setPastilles();
     $('#rail').css('margin-left', '-900px');
     $('#rail div.imageImport:last-child').insertBefore($('#rail div.imageImport:first-child'));
 
