@@ -18,8 +18,8 @@ function getImages() {
 
         for (var i = 0 ; i < images.length ; i ++) {
 
-            container.append('<div class = "imageImport" style=\'background-image: url(\"'+ images[i]['url'] +'\");\' title="'+ images[i]['title'] +'">');
-
+            container.append('<div class = "imageImport" data-id = "'+ i +'" style=\'background-image: url(\"'+ images[i]['url'] +'\");\' title="'+ images[i]['title'] +'">');
+            $(".pastillesList").append('<li class = "patilles"  id = "pastille'+ i +'" ></li>');
             title[i] = images[i]['title'];
             desc[i] = images[i]['desc'];
         }
@@ -82,7 +82,7 @@ function previousImage() {
 
         disable_buttons(true);
         changeLastImg();
-        container.animate({"margin-left": "0px"},{ duration : speed ,complete: function() { console.log("test");disable_buttons(false); }});
+        container.animate({"margin-left": "0px"},{ duration : speed ,complete: function() { disable_buttons(false); }});
         current--;
         if (current == -1) current = 2;
         $('#slideshow h2').text(title[current]);
