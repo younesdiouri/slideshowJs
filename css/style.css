@@ -64,3 +64,20 @@ img{
     box-shadow: none;
     opacity: .65;
 }
+.pastilles {
+    position: relative;
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    margin-top : 20px;
+    margin-right : 30px;
+    background-color: lightgrey;
+}
+.isActive {
+    background-color: darkgrey;
+}
+.pastillesList{
+    text-align: center;
+    position: relative;
+    margin-bottom: 30px;
+}
