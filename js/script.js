@@ -150,19 +150,4 @@ play_pause_button.click(function () {
 });
 
 
-// Hover
-
-$(document).on('mouseover' , '.imageImport' , function(){
-    clearInterval(auto);
-    play = false;
-    play_pause_button.html('<i class="fa fa-play" aria-hidden="true"></i> Play');
-});
-
-$(document).on('mouseout' , '.imageImport' , function(){
-    auto = setInterval(function(){ nextImage() }, speed);
-    play = true;
-});
-
-
-
 
