@@ -212,14 +212,14 @@ function changeLastImg() {
 if (play) {
 
     var auto = setInterval(function(){ nextImage() }, speed);
-    play_pause_button.html('<i class="fa fa-pause" aria-hidden="true"></i> Pause');
+    play_pause_button.html('<i class="fa fa-pause fa-4x" aria-hidden="true"></i>');
 
 }
 
 else {
 
     var auto = null;
-    play_pause_button.html('<i class="fa fa-play" aria-hidden="true"></i> Play');
+    play_pause_button.html('<i class="fa fa-play fa-4x" aria-hidden="true"></i>');
 }
 
 
@@ -232,7 +232,7 @@ play_pause_button.click(function () {
 
             clearInterval(auto);
             play = false;
-            $(this).html('<i class="fa fa-play" aria-hidden="true"></i> Play');
+            $(this).html('<i class="fa fa-play fa-4x" aria-hidden="true"></i>');
         }
 
         else {
@@ -241,7 +241,7 @@ play_pause_button.click(function () {
                 nextImage()
             }, speed);
             play = true;
-            $(this).html('<i class="fa fa-pause" aria-hidden="true"></i> Pause');
+            $(this).html('<i class="fa fa-pause fa-4x" aria-hidden="true"></i>');
         }
     }
 
