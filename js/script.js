@@ -7,8 +7,10 @@ var container = $('#rail');
 var play = false;
 var title = [];
 var desc = [];
+var first = 1;
 
 var current = 0;
+
 
 function getImages() {
     var url = "https://www.skrzypczyk.fr/slideshow.php";
@@ -19,16 +21,17 @@ function getImages() {
         for (var i = 0 ; i < images.length ; i ++) {
 
             container.append('<div class = "imageImport" data-id = "'+ i +'" style=\'background-image: url(\"'+ images[i]['url'] +'\");\' title="'+ images[i]['title'] +'">');
-            $(".pastillesList").append('<li class = "pastilles"  id = "'+ i +'" ></li>');
+            $(".pastillesList").append('<li class = "pastilles" id = "'+ i +'" onclick = "goToImage('+i+')" ></li>');
             title[i] = images[i]['title'];
             desc[i] = images[i]['desc'];
         }
-
+        $('.pastilles:first-child').toggleClass("isActive");
         $('#slideshow h2').text(title[current]);
         $('#slideshow p').text(desc[current]);
 
     });
 }
+
 
 
 function disable_buttons (status) {
@@ -67,24 +70,64 @@ function nextImage() {
 }
 
 function changeFirstImg() {
+
+   setPastilles();
+    container.css('margin-left', '0px');
+    $('#rail div.imageImport:last').after($('#rail div.imageImport:first'));
+    disable_buttons(false);
+    // alert(imageImportId);
+
+}
+function setPastilles(){
     var listPastilles = [];
     var imageImportId = $('#rail .imageImport:first').attr('data-id');
     $('.pastilles').each(function() {
         listPastilles.push($(this).attr('id'));
     });
-    container.css('margin-left', '0px');
-    $('#rail div.imageImport:last').after($('#rail div.imageImport:first'));
-    disable_buttons(false);
-    // alert(imageImportId);
     for (var j = 0; j<listPastilles.length; j++) {
 
         if (imageImportId == listPastilles[j]) {
-            console.log(listPastilles.length);
-            $('.pastilles[id="'+listPastilles[j]+'"]').toggleClass("isActive");
+            // console.log(j);
+            if(first== 1)
+            {
+                $('.pastilles[id="'+listPastilles[j+1]+'"]').toggleClass("isActive");
+                first = false;
+
+            }
+            else
+            {
+                if(j==(listPastilles.length-1))
+                {
+                    $('.pastilles[id="'+listPastilles[0]+'"]').toggleClass("isActive");
+                }
+                else
+                {
+                    $('.pastilles[id="'+listPastilles[j+1]+'"]').toggleClass("isActive");
+                }
+            }
+
         }
     }
+
 }
 
+function goToImage(destination)
+{
+    var source = $('#rail .imageImport:first').attr('data-id');
+    // console.log("Destination : " + destination + "Source : " + source);
+    if(destination - source > 0)
+    {
+        var count = destination - source;
+        while(count>0)
+        {
+            nextImage();
+            count--;
+
+        }
+    }
+
+
+}
 // Previous
 
 previous_button.click(previousImage);
