@@ -19,22 +19,38 @@ img{
     background-size : cover;
     background-position : center;
     height: 600px;
-    width: 900px;
+    /*width: 900px;*/
+}
+.assets{
+    display : inline-block;
+    text-shadow: 0px 0px 7px rgba(0, 0, 0, 0.75);
+    color: #0080ff;
+    font-size: 20px;
 }
 #slideshow {
 
     /*position: absolute;*/
-    width: 900px;
+    /*width: 900px;*/
     margin: 0 auto;
-    overflow: hidden;
+    /*overflow: hidden;*/
 
 }
 
 #rail {
 
-    width: 3600px; /* 4*900 disabling dynamism.*/
+    width: 8000px; /* 4*900 disabling dynamism.*/
     margin-bottom: 10px;
     position: relative;
+
+}
+#text {
+
+    width: 8000px; /* 4*900 disabling dynamism.*/
+    /*position: absolute*/
+    background: transparent;
+    position : relative;
+    /*color: antiquewhite;*/
+    z-index:-1;
 
 }
 
@@ -47,34 +63,49 @@ img{
 .btn-slide {
 
     position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
+    /*top: 50%;*/
     background: transparent;
-    padding: 170px 12px;
+    /*padding: 170px 12px;*/
     font-size: 14px;
-    cursor: pointer;
-    outline: none;
+    /*cursor: pointer;*/
+    /*outline: none;*/
     border-color: transparent;
     color: antiquewhite;
 }
 
 
 #previous {
-
+left : 0;
+    top : 450px;
 
 }
 
 #next {
 
-    right: 15%;
+    right: 0;
+    top : 450px;
 }
 
 #play-pause {
 
-    bottom: 0%;
-    left: 40%;
+    top : 450px;
+    left: 48%;
 }
+@media (max-width: 480px) {
+    #play-pause {
 
+        top : 450px;
+        left: 48%;
+    }
+    .btn-slide {
+        font-size: 7px;
+    }
+    #next {
+
+        right: 0;
+        top : 450px;
+    }
+}
 .btn.disabled {
 
     background-color: #fff;
